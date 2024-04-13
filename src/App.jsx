@@ -8,6 +8,8 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Login from './components/Login';
+import Profile from './components/Profile';
 // import ScaleLoader from "react-spinners/ScaleLoader";
 const moviesCollectionRef = collection(db, "movies");
 
@@ -85,6 +87,8 @@ function App() {
 
   return (
     <>
+      <Login />
+      <Profile />
       <div className='App'>
         {/* <ScaleLoader color="#36d7b7" /> */}
         <Auth/>

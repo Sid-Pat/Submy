@@ -1,10 +1,10 @@
-import { auth, googleprovider } from '../config/firebase'
+import { auth, googleprovider } from '../../config/firebase'
 import { createUserWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth'
 import { useState } from 'react'
 import CelebrationIcon from '@mui/icons-material/Celebration';
 import ScaleLoader from "react-spinners/ScaleLoader";
 
-export const Auth = () => {
+export const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loggedIn, setLoggedIn] = useState(auth.currentUser);
@@ -83,7 +83,12 @@ export const Auth = () => {
                 </button>
             </div>
             </div>:<h2>Login and edit your choices !</h2>}
+            <div>New User : 
+            {/* <Link to="/register"></Link> */}
+            </div> 
         </div>
         </>
     )
 }
+
+export default Login
