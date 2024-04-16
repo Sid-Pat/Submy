@@ -52,11 +52,11 @@ const logOut = async () => {
                       </Link>
                   </div>
                   <div
-                      className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
+                      className="justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
                       id="mobile-menu-2"
                   >
                       <ul className="flex flex-row mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-                          <li>
+                          <li className='flex flex-row space-x-7'>
                               <NavLink
                                   to='/'
                                   className={({isActive}) =>
@@ -82,12 +82,12 @@ const logOut = async () => {
                                   Contact Us
                               </NavLink>
                               <NavLink
-                                  to='/user'
+                                  to='/team'
                                   className={({isActive}) =>
                                       `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 ${isActive?"text-orange-700":"text-grey-700"} hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
                                   }
                               >
-                                  User
+                                  Team
                               </NavLink>
                               <NavLink
                                   to='/github'
@@ -95,7 +95,7 @@ const logOut = async () => {
                                       `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 ${isActive?"text-orange-700":"text-grey-700"} hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
                                   }
                               >
-                                  Github
+                                  Project
                               </NavLink>
                           </li>
                           

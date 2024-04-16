@@ -10,10 +10,11 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { auth } from '../../config/firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import UserContext from '../../context/UserContext';
 import { styled } from '@mui/material/styles';
 import { Navigate } from 'react-router-dom';
+import { Popconfirm } from 'antd';
 
 const Div = styled('div')(({ theme }) => ({
   ...theme.typography.button,
@@ -40,6 +41,22 @@ const defaultTheme = createTheme();
 
 export default function SignIn() {
     const {loggedIn,setLoggedIn} = useContext(UserContext);
+    const [open, setOpen] = useState(false);
+    const [confirmLoading, setConfirmLoading] = useState(false);
+    const showPopconfirm = () => {
+      setOpen(true);
+    };
+    const handleOk = () => {
+      setConfirmLoading(true);
+      setTimeout(() => {
+        setOpen(false);
+        setConfirmLoading(false);
+      }, 2000);
+    };
+    const handleCancel = () => {
+      console.log('Clicked cancel button');
+      setOpen(false);
+    };
     const createUser = async (email,password) => {
         try{
             await createUserWithEmailAndPassword(auth, email, password)
@@ -104,15 +121,27 @@ export default function SignIn() {
               sx={{mb:4}}
               autoComplete="current-password"
             />
+              <Popconfirm
+                title="Please have a look once again"
+                description="Kindly have a note of password"
+                open={open}
+                onConfirm={handleOk}
+                okButtonProps={{
+                  loading: confirmLoading,
+                }}
+                onCancel={handleCancel}
+              >
             <Button
               type="submit"
               fullWidth
+              onClick={showPopconfirm}
               variant="contained"
               color="warning"
               sx={{ mt: 3, mb: 2 }}
             >
               Register
             </Button>
+            </Popconfirm>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
