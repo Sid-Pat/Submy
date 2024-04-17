@@ -13,13 +13,14 @@ import { auth, db } from '../../config/firebase'
 // import UserContext from '../../context/UserContext';
 import { styled } from '@mui/material/styles';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
-import { useEffect , useState} from 'react';
+import { useContext, useEffect} from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
 import WorkIcon from '@mui/icons-material/Work';
+import UserContext from '../../context/UserContext';
 // import { Navigate } from 'react-router-dom';
 
 const Div = styled('div')(({ theme }) => ({
@@ -48,7 +49,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function Team() {
-    const [team, setTeam] = useState([]);
+    const {team,setTeam,loggedIn} = useContext(UserContext);
     
     // const {loggedIn,setLoggedIn} = useContext(UserContext);
     const getTeamList = async () => {
@@ -58,8 +59,26 @@ export default function Team() {
         //   ...doc.data(),
         //   id:doc.id})
         // );
-        const q1 = query(teamsCollectionRef, where("email","==",auth.currentUser.email));
-        const data = await getDocs(q1);
+        if(!loggedIn){
+          console.log("Kindly log in");
+          return;
+        }
+        let q1;
+        let data;
+        try{
+          q1 = query(teamsCollectionRef, where("email","==",auth.currentUser.email));
+          // console.log(q1)
+        }catch(err){
+          console.log(err)
+          return;
+        }
+        try{
+          data = await getDocs(q1);
+          console.log(data)
+        }catch(err){
+          console.log(err)
+          return;
+        }
         // data.forEach((doc)=>{
         //   console.log(doc.id,"->",doc.data())
         // })
@@ -109,6 +128,10 @@ export default function Team() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        if(auth==null){
+          console.log("Please login")
+          return;
+        }
         const data = new FormData(event.currentTarget);
         const {...teamInfo} = {
             s1sid:data.get('s1sid'),
@@ -123,7 +146,7 @@ export default function Team() {
         }
         createTeam(teamInfo)
     };
-  if(team.length!==0){
+  if(loggedIn && team.length!==0){
     return(
       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
       <Div> <Diversity3Icon/> Team Info </Div>
