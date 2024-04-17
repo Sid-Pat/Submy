@@ -13,6 +13,7 @@ import GitHub from './components/Github/Github.jsx'
 import Login from './components/Login/Login.jsx'
 import Register from './components/Register/Register.jsx'
 import Team from './components/Team/Team.jsx'
+import Project from './components/Project/Project.jsx'
 
 const router=createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +28,7 @@ const router=createBrowserRouter(
       <Route path='login' element={<Login/>}/>
       <Route path='register' element={<Register/> } />
       <Route path='team' element={ <Team/> }/>
+      <Route path='project' element={<Project/>} />
       <Route path='*' element={<div>Not Found</div>}/>
     </Route>
   )

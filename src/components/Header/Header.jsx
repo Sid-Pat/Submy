@@ -5,12 +5,13 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 
 export default function Header() {
-const {loggedIn,setLoggedIn} = useContext(UserContext);
+const {loggedIn,setLoggedIn,setTeam} = useContext(UserContext);
 const logOut = async () => {
     console.log("logging out")
     try{
         await signOut(auth);
-        setLoggedIn(auth.currentUser);
+        setLoggedIn(false);
+        setTeam([]);
     }catch(err){
         console.log(err);
     }
@@ -82,7 +83,7 @@ const logOut = async () => {
                                   Contact Us
                               </NavLink>
                               <NavLink
-                                  to='/team'
+                                  to="/team"
                                   className={({isActive}) =>
                                       `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 ${isActive?"text-orange-700":"text-grey-700"} hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
                                   }
