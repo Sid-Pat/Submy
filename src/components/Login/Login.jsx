@@ -41,7 +41,7 @@ export default function SignIn() {
     const signIn = async (email,password) => {
         try{
             await signInWithEmailAndPassword(auth, email, password)
-            setLoggedIn(auth.currentUser);
+            setLoggedIn(true);
         }catch(err){
             console.log(err)
         }
@@ -63,7 +63,7 @@ export default function SignIn() {
     event.preventDefault();
     try {
         await signInWithPopup(auth, googleprovider);
-        setLoggedIn(auth.currentUser);
+        setLoggedIn(true);
         console.log(auth.currentUser);
     }catch(err){
         console.log(err);
