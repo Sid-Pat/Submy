@@ -57,7 +57,7 @@ const logOut = async () => {
                       id="mobile-menu-2"
                   >
                       <ul className="flex flex-row mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-                          <li className='flex flex-row space-x-7'>
+                          <li className='flex flex-row space-x-4'>
                               <NavLink
                                   to='/'
                                   className={({isActive}) =>
