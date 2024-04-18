@@ -63,7 +63,7 @@ export default function Project() {
       console.log("object")
       let q1;
       let data;
-      if(auth!=null){
+      if(loggedIn!=true){
         console.log("Not logged in");
         return;
       }

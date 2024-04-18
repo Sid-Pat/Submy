@@ -13,21 +13,38 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import FolderIcon from '@mui/icons-material/Folder';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../config/firebase';
-
+import FolderOpenIcon from '@mui/icons-material/Folder';
+import { collection, doc, getDoc, getDocs, limit, query, updateDoc, where } from 'firebase/firestore';
+import { auth, db } from '../../config/firebase';
+import { Link } from 'react-router-dom';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { InputNumber, Space } from 'antd';
+import UserContext from '../../context/UserContext';
+import { Button } from 'antd';
 
 const projectCollectionRef =  collection(db , "project");
+
+// const plist = [
+//   {pname:"Karakaro", ptype:"opel", plink:"http://www.toplot.com",key:1,email:"gukiol",pmarks:10},
+//   {pname:"Karakaro", ptype:"opel", plink:"http://www.toplot.com",key:2,email:"gukiol",},
+//   {pname:"Karakaro", ptype:"opel", plink:"http://www.toplot.com",key:3,email:"gukiol",pmarks:10},
+// ]
+
+const adminList = ['admin@manit.com']
 
 const Demo = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
+const onChange = (value) => {
+  console.log('changed', value);
+};
+
 export default function Project() {
-  const [dense, setDense] = React.useState(false);
+  const {loggedIn} = React.useContext(UserContext);
+  const [dense, setDense] = React.useState(true);
   const [secondary, setSecondary] = React.useState(false);
+  const [isAdmin, setIsAdmin] = React.useState(false);
   const [plist,setPlist] = React.useState([]);
 
   const getAllProjects = async () => {
@@ -43,8 +60,9 @@ export default function Project() {
                 plink:instance.plink,
                 marks:instance.marks,
                 email:instance.email,
-                key:i,
+                key:data.docs[i].id,
             })
+            // console.log(data.docs[i].id)
         }
         console.log(plistArray)
         setPlist(plistArray);
@@ -55,7 +73,30 @@ export default function Project() {
   }
   useEffect(()=>{
     getAllProjects();
+    if(loggedIn==false) return;
+    adminList.forEach((adminEmail)=>{
+      if(adminEmail==auth.currentUser.email) {
+        setIsAdmin(true);
+        return;
+      }
+    })
+    setIsAdmin(false)
   },[])
+  const setMarks = async (id) => {
+     console.log(id) 
+     try{ 
+        if(loggedIn==false){
+          return;
+        }
+        const selectedProjectRef = doc(projectCollectionRef,id)
+        updateDoc(selectedProjectRef,{marks:10})
+        
+        getAllProjects()
+    }catch(err){
+      console.log(err);
+    }
+  }
+ 
 
 //   function generate(element) {
 //     let i=0;
@@ -68,7 +109,7 @@ export default function Project() {
 //   }
   
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, margin: 2 }}>
       <FormGroup row>
         <FormControlLabel
           control={
@@ -89,43 +130,71 @@ export default function Project() {
           label="Enable secondary text"
         />
       </FormGroup>
-      <Grid container spacing={6} className='mb-14'>
-        <Grid item xs={12} md={6}>
-          <Typography sx={{ mt: 4, mb: 2, m:4 }} variant="h6" component="div">
+      <Grid container spacing={12} display="flex" alignItems="center" justifyContent="center" className='mb-14'>
+        <Grid item xs={10} md={8}>
+          <Typography sx={{ mt: 4, mb: 2, m:4 , color:"#F95700FF" , fontSize:"3rem"}} variant="h6" component="div">
             Project List
           </Typography>
-          <Demo>
-          <List dense={dense}>
-            </List>
+          {/* <Box
+            display="flex" 
+            bgcolor="lightgreen"
+            alignItems="center"
+            justifyContent="center"
+          > */}
+          <Demo >
+          {/* <List dense={dense}>
+            </List> */}
             <List dense={dense}>
+              {/* List Rendering */}
               {plist.map((pinfo)=>(
-                <>
                 <ListItem
+                sx={{
+                  color:"#00A4CCFF",
+                  border:"#F95700FF 2px solid",
+                  marginBottom :"1rem",
+                  borderRadius:"1rem",
+                }}
                 key={pinfo.key}
                   secondaryAction={
+                    // <Space wrap>
+                      // {(isAdmin)?<InputNumber size="small" min={1} max={10} defaultValue={0} onChange={onChange} />:"Hellp"}
+                      // <InputNumber size="small" min={1} max={10} defaultValue={0} onChange={onChange} />
+                    // </Space>
                     <IconButton edge="end" aria-label="delete">
-                      <DeleteIcon />
+                    {/* //   {(isAdmin)?<RateReviewIcon />:""} */}
+                    {(isAdmin)?(<><InputNumber size="small" min={1} max={10} defaultValue={pinfo.marks} onChange={onChange} /><Button onClick={()=>setMarks(pinfo.key)} size="small">Add</Button></>):<></>}
                     </IconButton>
                   }
                 >
                   <ListItemAvatar>
-                    <Avatar>
-                      <FolderIcon />
-                    </Avatar>
+                    {/* <Avatar> */}
+                      <FolderOpenIcon color='warning'/>
+                    {/* </Avatar> */}
                   </ListItemAvatar>
                   <ListItemText
                     primary= {pinfo.pname}
-                    secondary={secondary ? pinfo.ptype : null}
+                    secondary={secondary ? pinfo.email : null}
                   />
                   <ListItemText
-                    primary= {pinfo.plink}
+                    // primary= {pinfo.plink}
+                    primary={pinfo.ptype}
                     // secondary={secondary ? pinfo.ptype : null}
                   />
-                </ListItem>,
-                </>
+                  <ListItemText
+                    // primary= {pinfo.plink}
+                    primary={<Link to={pinfo.plink} target="mynewtab" variant="body2" underline="hover">Open <OpenInNewIcon /> </Link>}
+                    // secondary={secondary ? pinfo.ptype : null}
+                  />
+                  <ListItemText
+                    // primary= {pinfo.plink}
+                    primary={(pinfo.marks==null)?"--":pinfo.marks}
+                    // secondary={secondary ? pinfo.ptype : null}
+                  />
+                </ListItem>
               ))}
             </List>
           </Demo>
+          {/* </Box> */}
         </Grid>
       </Grid>
     </Box>
