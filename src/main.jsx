@@ -14,6 +14,7 @@ import Login from './components/Login/Login.jsx'
 import Register from './components/Register/Register.jsx'
 import Team from './components/Team/Team.jsx'
 import Project from './components/Project/Project.jsx'
+import ProjectList from './components/Project/ProjectList.jsx'
 
 const router=createBrowserRouter(
   createRoutesFromElements(
@@ -29,6 +30,7 @@ const router=createBrowserRouter(
       <Route path='register' element={<Register/> } />
       <Route path='team' element={ <Team/> }/>
       <Route path='project' element={<Project/>} />
+      <Route path='projectlist' element={<ProjectList />} />
       <Route path='*' element={<div>Not Found</div>}/>
     </Route>
   )
