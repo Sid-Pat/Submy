@@ -9,7 +9,7 @@ export default function Footer() {
               <div className="md:flex md:justify-between">
                   <div className="mb-6 md:mb-0">
                       <Link to="/" className="flex items-center">
-                        <Typography variant="h1" className='text-orange-700'>Submy <BuildCircleIcon sx={{transform:"scale(2.5)" }}/></Typography>
+                        <Typography variant="h3" className='text-orange-700'>Submy <BuildCircleIcon sx={{transform:"scale(2.5)" }}/></Typography>
                       </Link>
                   </div>
                   <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
