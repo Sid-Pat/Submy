@@ -3,7 +3,7 @@ import {Link,NavLink} from 'react-router-dom';
 import UserContext from '../../context/UserContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../config/firebase';
-import React, { useRef, useState } from 'react';
+import  { useRef, useState } from 'react';
 import { Tour } from 'antd';
 import { Typography } from '@mui/material';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
@@ -20,6 +20,7 @@ const logOut = async () => {
         console.log(err);
     }
     console.log(auth.currentUser)
+
 }
 
 const ref1 = useRef(null);

@@ -6,7 +6,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import { useEffect } from 'react';
 import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -14,13 +13,14 @@ import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import FolderOpenIcon from '@mui/icons-material/Folder';
-import { collection, doc, getDoc, getDocs, limit, query, updateDoc, where } from 'firebase/firestore';
+import { collection, doc,  getDocs,  updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../config/firebase';
 import { Link } from 'react-router-dom';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { InputNumber, Space } from 'antd';
+import { InputNumber } from 'antd';
 import UserContext from '../../context/UserContext';
-import { Button } from 'antd';
+import { Button , Spin} from 'antd';
+
 
 const projectCollectionRef =  collection(db , "project");
 
@@ -44,8 +44,15 @@ export default function Project() {
   const {loggedIn} = React.useContext(UserContext);
   const [dense, setDense] = React.useState(true);
   const [secondary, setSecondary] = React.useState(false);
-  const [isAdmin, setIsAdmin] = React.useState(false);
+  const [isAdmin, setIsAdmin] = React.useState(true);
   const [plist,setPlist] = React.useState([]);
+  const [spinning, setSpinning] = React.useState(false);
+    const showLoader = () => {
+      setSpinning(true);
+      setTimeout(() => {
+        setSpinning(false);
+      }, 1000);
+    };
 
   const getAllProjects = async () => {
     try{
@@ -72,15 +79,19 @@ export default function Project() {
 
   }
   useEffect(()=>{
+    showLoader();
     getAllProjects();
     if(loggedIn==false) return;
+    let admin=false
     adminList.forEach((adminEmail)=>{
       if(adminEmail==auth.currentUser.email) {
+        console.log(adminEmail,auth.currentUser.email);
         setIsAdmin(true);
+        admin=true
         return;
       }
     })
-    setIsAdmin(false)
+    if(!admin) setIsAdmin(false)
   },[])
   const setMarks = async (id) => {
      console.log(id) 
@@ -96,19 +107,12 @@ export default function Project() {
       console.log(err);
     }
   }
- 
-
-//   function generate(element) {
-//     let i=0;
-//     return plist.map((pinfo) =>
-//       React.cloneElement(element, {
-//         key: i,props:{pname:pinfo.pname}
-//       }),
-      
-//     );
-//   }
   
   return (
+    <>
+    <Spin tip="Loading"  spinning={spinning} fullscreen>
+    <div className="content" />
+    </Spin>
     <Box sx={{ flexGrow: 1, margin: 2 }}>
       <FormGroup row>
         <FormControlLabel
@@ -135,15 +139,7 @@ export default function Project() {
           <Typography sx={{ mt: 4, mb: 2, m:4 , color:"#F95700FF" , fontSize:"3rem"}} variant="h6" component="div">
             Project List
           </Typography>
-          {/* <Box
-            display="flex" 
-            bgcolor="lightgreen"
-            alignItems="center"
-            justifyContent="center"
-          > */}
           <Demo >
-          {/* <List dense={dense}>
-            </List> */}
             <List dense={dense}>
               {/* List Rendering */}
               {plist.map((pinfo)=>(
@@ -160,6 +156,7 @@ export default function Project() {
                       // {(isAdmin)?<InputNumber size="small" min={1} max={10} defaultValue={0} onChange={onChange} />:"Hellp"}
                       // <InputNumber size="small" min={1} max={10} defaultValue={0} onChange={onChange} />
                     // </Space>
+                    
                     <IconButton edge="end" aria-label="delete">
                     {/* //   {(isAdmin)?<RateReviewIcon />:""} */}
                     {(isAdmin)?(<><InputNumber size="small" min={1} max={10} defaultValue={pinfo.marks} onChange={onChange} /><Button onClick={()=>setMarks(pinfo.key)} size="small">Add</Button></>):<></>}
@@ -198,5 +195,6 @@ export default function Project() {
         </Grid>
       </Grid>
     </Box>
+    </>
   );
 }

@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
+import {Link as Rlink} from 'react-router-dom'
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -21,6 +22,11 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import UserContext from '../../context/UserContext';
+import List from '@mui/material/List';
+import CodeIcon from '@mui/icons-material/Code';
+import { styled } from '@mui/material/styles';
+import { Spin } from 'antd';
+
 
 
 function Copyright(props) {
@@ -46,7 +52,11 @@ const bull = (
   </Box>
 );
 
-
+const Div = styled('div')(({ theme }) => ({
+  ...theme.typography.button,
+  backgroundColor: theme.palette.background.paper,
+  padding: theme.spacing(1),
+}));
 
 const projectCollectionRef =  collection(db , "project");
 
@@ -58,6 +68,13 @@ export default function Project() {
   const [open, setOpen] = React.useState(false);
   const [pinfo, setPinfo] = React.useState([]);
   const {loggedIn} = React.useContext(UserContext);
+  const [spinning, setSpinning] = React.useState(false);
+    const showLoader = () => {
+      setSpinning(true);
+      setTimeout(() => {
+        setSpinning(false);
+      }, 1000);
+    };
   const checkProjectStatus = async () => {
     try{
       console.log("object")
@@ -91,8 +108,8 @@ export default function Project() {
     }
   }
   useEffect(()=>{
+    showLoader();
     checkProjectStatus();
-    setTimeout(()=>{},500)
   },[]);
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -131,6 +148,10 @@ export default function Project() {
 
   if(loggedIn && pinfo.length===0){
   return (
+    <>
+    <Spin tip="Loading"  spinning={spinning} fullscreen>
+    <div className="content" />
+    </Spin>
     <ThemeProvider theme={defaultTheme}>
       <Snackbar
         open={open}
@@ -215,39 +236,80 @@ export default function Project() {
       </Container>
       <Divider />
     </ThemeProvider>
+    </>
   );
   }else if(loggedIn && pinfo.length!==0){
     return(
       <>
-  <Box sx={{ minWidth: 275 }}>
-      <Card variant="outlined"> 
+      <Spin tip="Loading"  spinning={spinning} fullscreen>
+    <div className="content" />
+    </Spin>
+     <Grid container spacing={12} className="m-3" display="flex" alignItems="center" justifyContent="center">
+    <Grid item xs={9} md={5} align="center"> 
+    <Box className="m-10">
+      <Card variant="outlined">
       <React.Fragment>
     <CardContent>
-      <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-        My Project
+      <Typography variant="h3" color="text.secondary" gutterBottom>
+        Project Info
       </Typography>
       <Typography variant="h5" component="div">
-        {pinfo.pname}
+        {bull}{bull}{bull}{bull}{bull}{bull}{bull}{bull}{bull}
       </Typography>
-      <Typography sx={{ mb: 1.5 }} color="text.secondary">
-        Type : {pinfo.ptype}
+      {/* <Typography sx={{ mb: 1.5 }} color="text.secondary">
+        adjective
+      </Typography> */}
+      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+      <Div> 
+        <CodeIcon />
+      </Div>
+      <Typography variant="h6" component="div">
+        Project name : {pinfo.pname}
       </Typography>
-      <Typography variant="body2">
-        Link to Project : {pinfo.plink}
-        <br />
+      <Typography variant="h6" component="div">
+        Project type : {pinfo.ptype}
       </Typography>
+        
+          
+    </List>
+    <Typography variant="h5" component="div">
+        {bull}{bull}{bull}{bull}{bull}{bull}{bull}{bull}{bull}
+    </Typography>
     </CardContent>
     <CardActions>
-      <Button size="small">Go to source code</Button>
+      <Link target="mynewtab" to={pinfo.plink} size="small">Go to source code</Link>
     </CardActions>
   </React.Fragment>
       </Card>
-  </Box>
+    </Box>
+    </Grid>
+    </Grid>
       </>
     );
   }else{
     return (
+      <>
+      <Spin tip="Loading"  spinning={spinning} fullscreen>
+    <div className="content" />
+    </Spin>
+    <Grid container spacing={12} className="m-20" display="flex" alignItems="center" justifyContent="center" >
+    <Grid item xs={9} md={5} align="center"> 
+    <Box className="m-20">
+
       <h1>{bull} Kindly do login {bull} </h1>
+      <br />
+      <br />
+      <Rlink
+          to="/login"
+          className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+          onClick={()=>setOpen(true)}
+      >
+          Login
+      </Rlink>
+      </Box>
+      </Grid>
+      </Grid>
+      </>
     )
   }
 }

@@ -1,3 +1,4 @@
+import React from 'react'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -19,15 +20,32 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
-import WorkIcon from '@mui/icons-material/Work';
 import UserContext from '../../context/UserContext';
 // import { Navigate } from 'react-router-dom';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import { Grid } from '@mui/material';
+import { AccountCircleOutlined } from '@mui/icons-material';
+import {  Spin } from 'antd';
+
 
 const Div = styled('div')(({ theme }) => ({
   ...theme.typography.button,
   backgroundColor: theme.palette.background.paper,
   padding: theme.spacing(1),
 }));
+
+
+const bull = (
+  <Box
+    component="span"
+    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
+  >
+    •
+  </Box>
+);
+
 
 const teamsCollectionRef =  collection(db , "teams");
 
@@ -50,7 +68,13 @@ const defaultTheme = createTheme();
 
 export default function Team() {
     const {team,setTeam,loggedIn} = useContext(UserContext);
-    
+    const [spinning, setSpinning] = React.useState(false);
+    const showLoader = () => {
+      setSpinning(true);
+      setTimeout(() => {
+        setSpinning(false);
+      }, 1000);
+    };
     // const {loggedIn,setLoggedIn} = useContext(UserContext);
     const getTeamList = async () => {
       try{
@@ -96,6 +120,7 @@ export default function Team() {
       }
     }
     useEffect(()=>{
+      showLoader();
       getTeamList();
     },[])
 
@@ -146,17 +171,40 @@ export default function Team() {
         }
         createTeam(teamInfo)
     };
+
   if(loggedIn && team.length!==0){
     return(
+      <>
+      <Spin tip="Loading"  spinning={spinning} fullscreen>
+    <div className="content" />
+    </Spin>
+      <Grid container spacing={12} className="m-3" display="flex" alignItems="center" justifyContent="center">
+    <Grid item xs={9} md={5} align="center"> 
+    <Box className="m-10">
+      <Card variant="outlined">
+      <React.Fragment>
+    <CardContent>
+      <Typography variant="h3" color="text.secondary" gutterBottom>
+        Team Info
+      </Typography>
+      <Typography variant="h5" component="div">
+        {bull}{bull}{bull}{bull}{bull}{bull}{bull}{bull}{bull}
+      </Typography>
+      {/* <Typography sx={{ mb: 1.5 }} color="text.secondary">
+        adjective
+      </Typography> */}
       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      <Div> <Diversity3Icon/> Team Info </Div>
+      <Div> <Diversity3Icon/> </Div>
+      <Typography variant="h6" component="div">
+        Name and Scholar Number
+      </Typography>
       {
-        Object.entries(team.teamInfo).map(([key,value],i)=>{
+        Object.entries(team.teamInfo).map(([key,value])=>{
           return(
             <ListItem key={key}>
             <ListItemAvatar>
               <Avatar>
-                <WorkIcon />
+                <AccountCircleOutlined />
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary={value.name} secondary={key} />
@@ -165,9 +213,26 @@ export default function Team() {
         })
       }
     </List>
+    <Typography variant="h5" component="div">
+        {bull}{bull}{bull}{bull}{bull}{bull}{bull}{bull}{bull}
+    </Typography>
+    </CardContent>
+    <CardActions>
+      <Link size="small">Go to my project status</Link>
+    </CardActions>
+  </React.Fragment>
+      </Card>
+    </Box>
+    </Grid>
+    </Grid>
+    </>
     )
   }
   return (
+    <>
+    <Spin tip="Loading"  spinning={spinning} fullscreen>
+    <div className="content" />
+    </Spin>
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -282,6 +347,7 @@ export default function Team() {
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
+    </>
   );
 }
 
