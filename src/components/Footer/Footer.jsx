@@ -1,4 +1,6 @@
+import { Typography } from '@mui/material';
 import {Link} from 'react-router-dom';
+import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 
 export default function Footer() {
   return (
@@ -7,11 +9,7 @@ export default function Footer() {
               <div className="md:flex md:justify-between">
                   <div className="mb-6 md:mb-0">
                       <Link to="/" className="flex items-center">
-                          <img
-                              src="https://alexharkness.com/wp-content/uploads/2020/06/logo-2.png"
-                              className="mr-3 h-16"
-                              alt="Logo"
-                          />
+                        <Typography variant="h1" className='text-orange-700'>Submy <BuildCircleIcon sx={{transform:"scale(2.5)" }}/></Typography>
                       </Link>
                   </div>
                   <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
@@ -35,7 +33,7 @@ export default function Footer() {
                           <ul className="text-gray-500 font-medium">
                               <li className="mb-4">
                                   <a
-                                      href="https://github.com/hiteshchoudhary"
+                                      href="https://github.com/sid-pat"
                                       className="hover:underline"
                                       target="_blank"
                                       rel="noreferrer"
@@ -119,7 +117,7 @@ export default function Footer() {
                           </svg>
                           <span className="sr-only">Twitter page</span>
                       </Link>
-                      <Link to="#" className="text-gray-500">
+                      <Link target="mynewtab" to="https://github.com/sid-pat" className="text-gray-500">
                           <svg
                               className="w-4 h-4"
                               aria-hidden="true"
