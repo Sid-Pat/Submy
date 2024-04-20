@@ -292,11 +292,11 @@ export default function Project() {
       <Spin tip="Loading"  spinning={spinning} fullscreen>
     <div className="content" />
     </Spin>
-    <Grid container spacing={12} className="m-20" display="flex" alignItems="center" justifyContent="center" >
-    <Grid item xs={9} md={5} align="center"> 
-    <Box className="m-20">
+    <Grid container spacing={10} className="m-12" display="flex" alignItems="center" justifyContent="center" >
+    <Grid item xs={9} md={9} align="center"> 
+    <Box className="m-5">
 
-      <h1>{bull} Kindly do login {bull} </h1>
+      <h1>{bull} Please login to access this feature {bull} </h1>
       <br />
       <br />
       <Rlink
@@ -307,6 +307,11 @@ export default function Project() {
           Login
       </Rlink>
       </Box>
+      </Grid>
+      <Grid item xs={9} md={9} align="center"> 
+      <div className="grid  place-items-center sm:mt-20">
+              <img className="sm:w-96 w-48" src="/magnifier_team.jpg" alt="image2" />
+         </div>
       </Grid>
       </Grid>
       </>

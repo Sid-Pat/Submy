@@ -52,15 +52,15 @@ export default function Home() {
               </div>
             
               <div className="absolute inset-0 w-full sm:my-20 sm:pt-1 pt-12 h-full ">
-                  <img className="w-96" src="../../public/teamphoto.png!w700wp" alt="image1" />
+                  <img className="w-96" src="/working_team.jpg" alt="image1" />
               </div>
           </aside>
 
           <div className="grid  place-items-center sm:mt-20">
-              <img className="sm:w-96 w-48" src="../../public/project.jpeg" alt="image2" />
+              <img className="sm:w-96 w-48" src="/team_work.jpg" alt="image2" />
           </div>
 
-          <h1 className="text-center text-2xl sm:text-5xl py-10 font-medium">Add more ...</h1>
+          <h1 className="text-center text-2xl sm:text-5xl py-10 font-medium">...............</h1>
       </div>
   );
 }
